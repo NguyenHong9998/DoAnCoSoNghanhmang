@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="login.Register">
+    tools:context="register.Register">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,7 +40,7 @@
 
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/id"></ImageView>
+                    android:src="@mipmap/id"></ImageView>
 
                 <EditText
                     android:id="@+id/id"
@@ -65,7 +65,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/user_icon"></ImageView>
+                    android:src="@mipmap/user_icon"></ImageView>
 
                 <EditText
                     android:id="@+id/name"
@@ -90,7 +90,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/grade"></ImageView>
+                    android:src="@mipmap/grade"></ImageView>
 
                 <EditText
                     android:id="@+id/grade"
@@ -113,7 +113,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/lock_icon"></ImageView>
+                    android:src="@mipmap/lock_icon"></ImageView>
 
                 <EditText
                     android:id="@+id/password"
@@ -137,7 +137,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/confirm_pass"></ImageView>
+                    android:src="@mipmap/confirm_pass"></ImageView>
 
                 <EditText
                     android:id="@+id/password_confirm"
@@ -155,7 +155,7 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/ic_launcher_background"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/show_pass"></ImageButton>
+                    android:src="@mipmap/show_pass"></ImageButton>
 
             </LinearLayout>
         </LinearLayout>

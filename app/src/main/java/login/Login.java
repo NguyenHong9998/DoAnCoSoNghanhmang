@@ -1,12 +1,13 @@
 package login;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.media.MediaCodec;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,8 +25,9 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import Object.*;
 import io.socket.emitter.Emitter;
+import register.Register;
 
-public class Login extends AppCompatActivity {
+public class Login extends Fragment {
     MediaCodec.QueueRequest queueRequest;
     Button login_button;
     EditText id;
@@ -36,15 +38,15 @@ public class Login extends AppCompatActivity {
     TextView notifi, register;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        id = findViewById(R.id.id);
-        password = findViewById(R.id.password);
-        login_button = findViewById(R.id.login_button);
-        notifi = findViewById(R.id.notifi);
-        register = findViewById(R.id.register);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.activity_login, container, false);
+        id = v.findViewById(R.id.id);
+        password = v.findViewById(R.id.password);
+        login_button = v.findViewById(R.id.login_button);
+        notifi = v.findViewById(R.id.notifi);
+        register = v.findViewById(R.id.register);
         try {
             socket = IO.socket("http://192.168.1.45:5000/");
         } catch (URISyntaxException e) {
@@ -71,7 +73,7 @@ public class Login extends AppCompatActivity {
                     socket.on("check account", new Emitter.Listener() {
                         @Override
                         public void call(final Object... args) {
-                            runOnUiThread(new Runnable() {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     JSONObject status = (JSONObject) args[0];
@@ -82,12 +84,12 @@ public class Login extends AppCompatActivity {
                                         student = gson.fromJson(status.getJSONObject("student").toString(), Student.class);
                                         if (isValid) {
                                             notifi.setVisibility(View.INVISIBLE);
-                                            Toast.makeText(Login.this, "Đăng nhập thành công", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), "Đăng nhập thành công", Toast.LENGTH_LONG).show();
                                             Intent intent = new Intent(view.getContext(), LoginSuccess.class);
                                             intent.putExtra("student", student);
                                             view.getContext().startActivity(intent);
                                         } else {
-                                            Toast.makeText(Login.this, "Đăng nhập không thành công", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), "Đăng nhập không thành công", Toast.LENGTH_LONG).show();
                                             notifi.setVisibility(View.VISIBLE);
                                         }
                                     } catch (JSONException e) {
@@ -107,6 +109,10 @@ public class Login extends AppCompatActivity {
                 v.getContext().startActivity(intent);
             }
         });
+
+        return v;
+
     }
+
 
 }
