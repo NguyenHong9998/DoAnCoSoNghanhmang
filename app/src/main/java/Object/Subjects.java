@@ -10,11 +10,12 @@ public class Subjects implements Serializable {
     private int num_ques;
     private String time;
     private String comment;
+    private String id_list_ques;
 
     public Subjects() {
     }
 
-    public Subjects(String name, int numOfRating, String level, int numOfQuestion, float rating, String time, String comment) {
+    public Subjects(String name, int numOfRating, String level, int numOfQuestion, float rating, String time, String comment, String id_list_ques) {
         this.name = name;
         this.num_rate = numOfRating;
         this.level = level;
@@ -22,6 +23,15 @@ public class Subjects implements Serializable {
         this.rating = rating;
         this.time = time;
         this.comment = comment;
+        this.id_list_ques = id_list_ques;
+    }
+
+    public String getId_list_ques() {
+        return id_list_ques;
+    }
+
+    public void setId_list_ques(String id_list_ques) {
+        this.id_list_ques = id_list_ques;
     }
 
     public String getComment() {

@@ -68,26 +68,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-        /* try {
-            mSocket = IO.socket("http://192.168.1.45:5000/");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        mSocket.connect();
-        mSocket.emit("send-data", "leu leu");*/
-
-/*
-        Button login_button = findViewById(R.id.login_button);
-        login_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Login.class);
-                v.getContext().startActivity(intent);
-            }
-        });*/
     }
 
     private void loadFragment(Fragment fragment) {

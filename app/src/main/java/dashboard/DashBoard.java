@@ -1,5 +1,6 @@
 package dashboard;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
+import com.example.multiplechoiceexaminationapp.MainActivity;
 import com.example.multiplechoiceexaminationapp.R;
 import com.google.gson.Gson;
 
@@ -33,9 +36,11 @@ import Object.*;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import question.StartExam;
+import register.Register;
 
 
-public class DashBoard extends Fragment {
+public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickListener {
 
     RecyclerView view;
     List<Subjects> subjects;
@@ -59,13 +64,13 @@ public class DashBoard extends Fragment {
         view.setLayoutManager(layoutManager);
 
         view.setHasFixedSize(true);
-        DividerItemDecoration divider = new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL);
+       /* DividerItemDecoration divider = new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.recycler_view_divider));
-        view.addItemDecoration(divider);
+        view.addItemDecoration(divider);*/
         subjects = new ArrayList<>();
 
         try {
-            socket = IO.socket("http://192.168.1.118:5000/");
+            socket = IO.socket("http://192.168.1.74:5000/");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -79,17 +84,23 @@ public class DashBoard extends Fragment {
                     @Override
                     public void run() {
                         JSONArray subjectJSON = (JSONArray) args[0];
-
                         try {
                             for (int i = 0; i < subjectJSON.length(); i++) {
                                 JSONObject explrObject = subjectJSON.getJSONObject(i);
                                 Gson gson = new Gson();
-                                subject= new Subjects();
+                                subject = new Subjects();
                                 subject = gson.fromJson(String.valueOf(explrObject), Subjects.class);
                                 subjects.add(subject);
-                                adapter = new SubjectAdapter(getActivity().getApplicationContext(), subjects);
-                                view.setAdapter(adapter);
                             }
+                            adapter = new SubjectAdapter(getActivity().getApplicationContext(), subjects);
+                            view.setAdapter(adapter);
+                            adapter.setOnItemClickListener(new SubjectAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(int position) {
+                                    Intent intent = new Intent(getContext(), StartExam.class);
+                                    startActivity(intent);
+                                }
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -102,4 +113,8 @@ public class DashBoard extends Fragment {
         return v;
     }
 
+    @Override
+    public void onItemClick(int position) {
+
+    }
 }
