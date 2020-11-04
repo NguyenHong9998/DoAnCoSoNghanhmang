@@ -26,6 +26,7 @@ import io.socket.client.Socket;
 import Object.*;
 import io.socket.emitter.Emitter;
 import register.Register;
+import utils.SocketUtil;
 
 public class Login extends Fragment {
     MediaCodec.QueueRequest queueRequest;
@@ -48,7 +49,7 @@ public class Login extends Fragment {
         notifi = v.findViewById(R.id.notifi);
         register = v.findViewById(R.id.register);
         try {
-            socket = IO.socket("http://192.168.1.45:5000/");
+            socket = SocketUtil.getConnection();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

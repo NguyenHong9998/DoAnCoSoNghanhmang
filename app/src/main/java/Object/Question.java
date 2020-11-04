@@ -5,11 +5,16 @@ import java.util.Map;
 
 public class Question {
     private String question;
-    private Map<String, Boolean> answers;
+    private Map<Integer, String> answer;
+    private Integer correctAnswer;
 
-    public Question(String question, Map<String, Boolean> answers) {
+    public Question() {
+    }
+
+    public Question(String question, Map<Integer, String> answer, Integer correctAnswer) {
         this.question = question;
-        this.answers = answers;
+        this.answer = answer;
+        this.correctAnswer = correctAnswer;
     }
 
     public String getQuestion() {
@@ -20,11 +25,19 @@ public class Question {
         this.question = question;
     }
 
-    public Map<String, Boolean> getAnswers() {
-        return answers;
+    public Map<Integer, String> getAnswer() {
+        return answer;
     }
 
-    public void setAnswers(Map<String, Boolean> answers) {
-        this.answers = answers;
+    public void setAnswer(Map<Integer, String> answer) {
+        this.answer = answer;
+    }
+
+    public Integer getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(Integer correctAnswer) {
+        this.correctAnswer = correctAnswer;
     }
 }

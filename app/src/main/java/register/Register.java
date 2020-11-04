@@ -18,6 +18,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import login.Login;
+import utils.SocketUtil;
 
 import com.example.multiplechoiceexaminationapp.R;
 import com.google.gson.Gson;
@@ -50,7 +51,7 @@ public class Register extends AppCompatActivity {
         register_button = findViewById(R.id.register_button);
         show_pass = findViewById(R.id.show_pass);
         try {
-            socket = IO.socket("http://192.168.1.45:5000/");
+            socket = SocketUtil.getConnection();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

@@ -1,8 +1,11 @@
 package Object;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
-public class Subjects implements Serializable {
+public class Subjects implements Serializable, Parcelable {
     private float rating;
     private String name;
     private int num_rate;
@@ -25,6 +28,29 @@ public class Subjects implements Serializable {
         this.comment = comment;
         this.id_list_ques = id_list_ques;
     }
+
+    protected Subjects(Parcel in) {
+        rating = in.readFloat();
+        name = in.readString();
+        num_rate = in.readInt();
+        level = in.readString();
+        num_ques = in.readInt();
+        time = in.readString();
+        comment = in.readString();
+        id_list_ques = in.readString();
+    }
+
+    public static final Creator<Subjects> CREATOR = new Creator<Subjects>() {
+        @Override
+        public Subjects createFromParcel(Parcel in) {
+            return new Subjects(in);
+        }
+
+        @Override
+        public Subjects[] newArray(int size) {
+            return new Subjects[size];
+        }
+    };
 
     public String getId_list_ques() {
         return id_list_ques;
@@ -91,4 +117,20 @@ public class Subjects implements Serializable {
         this.num_ques = num_ques;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeFloat(rating);
+        dest.writeString(name);
+        dest.writeInt(num_rate);
+        dest.writeString(level);
+        dest.writeInt(num_ques);
+        dest.writeString(time);
+        dest.writeString(comment);
+        dest.writeString(id_list_ques);
+    }
 }

@@ -1,23 +1,17 @@
 package dashboard;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
-import com.example.multiplechoiceexaminationapp.MainActivity;
 import com.example.multiplechoiceexaminationapp.R;
 import com.google.gson.Gson;
 
@@ -26,18 +20,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.security.auth.Subject;
 
 import Object.*;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import question.StartExam;
-import register.Register;
+import question.StartExamFragment;
+import utils.SocketUtil;
 
 
 public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickListener {
@@ -64,13 +55,10 @@ public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickLis
         view.setLayoutManager(layoutManager);
 
         view.setHasFixedSize(true);
-       /* DividerItemDecoration divider = new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.recycler_view_divider));
-        view.addItemDecoration(divider);*/
         subjects = new ArrayList<>();
 
         try {
-            socket = IO.socket("http://192.168.1.74:5000/");
+            socket = SocketUtil.getConnection();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -97,8 +85,14 @@ public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickLis
                             adapter.setOnItemClickListener(new SubjectAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
-                                    Intent intent = new Intent(getContext(), StartExam.class);
-                                    startActivity(intent);
+                                    StartExamFragment nextFrag = new StartExamFragment();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelable("subject", subjects.get(position));
+                                    nextFrag.setArguments(bundle);
+                                    getActivity().getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.frame, nextFrag, "findThisFragment")
+                                            .addToBackStack(null)
+                                            .commit();
                                 }
                             });
                         } catch (JSONException e) {
