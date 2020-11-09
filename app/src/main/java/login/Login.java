@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.media.MediaCodec;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.multiplechoiceexaminationapp.MainActivity;
 import com.example.multiplechoiceexaminationapp.R;
 import com.google.gson.Gson;
 
@@ -21,11 +24,13 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import dashboard.DashBoard;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import Object.*;
 import io.socket.emitter.Emitter;
 import register.Register;
+import utils.ShareStorageUtil;
 import utils.SocketUtil;
 
 public class Login extends Fragment {
@@ -37,11 +42,12 @@ public class Login extends Fragment {
     Student student;
     Socket socket;
     TextView notifi, register;
+    ShareStorageUtil shareStorageUtil;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        this.shareStorageUtil = new ShareStorageUtil(getContext());
         View v = inflater.inflate(R.layout.activity_login, container, false);
         id = v.findViewById(R.id.id);
         password = v.findViewById(R.id.password);
@@ -78,7 +84,6 @@ public class Login extends Fragment {
                                 @Override
                                 public void run() {
                                     JSONObject status = (JSONObject) args[0];
-
                                     try {
                                         Boolean isValid = status.getBoolean("status");
                                         Gson gson = new Gson();
@@ -86,9 +91,9 @@ public class Login extends Fragment {
                                         if (isValid) {
                                             notifi.setVisibility(View.INVISIBLE);
                                             Toast.makeText(getContext(), "Đăng nhập thành công", Toast.LENGTH_LONG).show();
-                                            Intent intent = new Intent(view.getContext(), LoginSuccess.class);
-                                            intent.putExtra("student", student);
-                                            view.getContext().startActivity(intent);
+                                            shareStorageUtil.applyValue("token", status.getJSONObject("student").toString());
+                                            Intent intent = new Intent(getContext(), MainActivity.class);
+                                            startActivity(intent);
                                         } else {
                                             Toast.makeText(getContext(), "Đăng nhập không thành công", Toast.LENGTH_LONG).show();
                                             notifi.setVisibility(View.VISIBLE);
@@ -103,6 +108,7 @@ public class Login extends Fragment {
                 }
             }
         });
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

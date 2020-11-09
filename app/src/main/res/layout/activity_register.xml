@@ -37,10 +37,9 @@
                 android:orientation="horizontal">
 
                 <ImageView
-
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@mipmap/id"></ImageView>
+                    android:src="@mipmap/user_icon"></ImageView>
 
                 <EditText
                     android:id="@+id/id"

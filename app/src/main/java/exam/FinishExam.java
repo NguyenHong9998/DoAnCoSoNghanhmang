@@ -60,8 +60,7 @@ public class FinishExam extends AppCompatActivity implements VoteDialog.ExampleD
         VoteDialog dialog = new VoteDialog();
         dialog.show(getSupportFragmentManager(), "vote dialog");
     }
-
-
+    
     @Override
     public void applyVote(int rate) {
         JSONObject data = new JSONObject();
@@ -72,7 +71,6 @@ public class FinishExam extends AppCompatActivity implements VoteDialog.ExampleD
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         socket.emit("rate", data);
     }
 }
