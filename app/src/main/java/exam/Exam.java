@@ -58,7 +58,7 @@ public class Exam extends AppCompatActivity implements QuestionAdapter.OnItemCli
 
         subject = getIntent().getParcelableExtra("subject");
         String time = subject.getTime();
-        selectedAnswers = new HashMap<>();
+        selectedAnswers = new LinkedHashMap<>();
         for (int i = 0; i < subject.getNum_ques(); i++) {
             selectedAnswers.put(i, 0);
         }

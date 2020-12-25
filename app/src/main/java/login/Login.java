@@ -3,10 +3,7 @@ package login;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
-import android.media.MediaCodec;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +21,14 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-import dashboard.DashBoard;
-import io.socket.client.IO;
 import io.socket.client.Socket;
 import Object.*;
 import io.socket.emitter.Emitter;
-import register.Register;
+import register.RegisterFragment;
 import utils.ShareStorageUtil;
 import utils.SocketUtil;
 
 public class Login extends Fragment {
-    MediaCodec.QueueRequest queueRequest;
     Button login_button;
     EditText id;
     EditText password;
@@ -86,12 +80,16 @@ public class Login extends Fragment {
                                     JSONObject status = (JSONObject) args[0];
                                     try {
                                         Boolean isValid = status.getBoolean("status");
+                                        if (status.getJSONObject("student").toString() == "") {
+                                            isValid = false;
+                                        }
                                         Gson gson = new Gson();
-                                        student = gson.fromJson(status.getJSONObject("student").toString(), Student.class);
                                         if (isValid) {
+                                            student = gson.fromJson(status.getJSONObject("student").toString(), Student.class);
                                             notifi.setVisibility(View.INVISIBLE);
                                             Toast.makeText(getContext(), "Đăng nhập thành công", Toast.LENGTH_LONG).show();
                                             shareStorageUtil.applyValue("token", status.getJSONObject("student").toString());
+                                            socket.disconnect();
                                             Intent intent = new Intent(getContext(), MainActivity.class);
                                             startActivity(intent);
                                         } else {
@@ -112,8 +110,13 @@ public class Login extends Fragment {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Register.class);
-                v.getContext().startActivity(intent);
+                socket.disconnect();
+                socket.close();
+                RegisterFragment nextFrag = new RegisterFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 

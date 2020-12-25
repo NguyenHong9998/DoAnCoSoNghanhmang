@@ -85,6 +85,8 @@ public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickLis
                             adapter.setOnItemClickListener(new SubjectAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
+                                    socket.disconnect();
+                                    socket.close();
                                     StartExamFragment nextFrag = new StartExamFragment();
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("subject", subjects.get(position));

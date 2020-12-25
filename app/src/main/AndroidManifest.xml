@@ -14,7 +14,6 @@
         android:usesCleartextTraffic="true">
         <activity android:name="exam.FinishExam"></activity>
         <activity android:name="exam.Exam" />
-        <activity android:name="register.Register"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

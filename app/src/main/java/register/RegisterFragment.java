@@ -1,55 +1,61 @@
 package register;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
+
+import androidx.fragment.app.Fragment;
+
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import Object.*;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import login.Login;
-import utils.SocketUtil;
-
 import com.example.multiplechoiceexaminationapp.R;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-public class Register extends AppCompatActivity {
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import login.Login;
+import utils.SocketUtil;
+import Object.*;
+
+
+public class RegisterFragment extends Fragment {
     TextView id, name, grade, pass, confirm_pass, notifi, login_notifi;
     Button register_button;
     ImageButton show_pass;
     Socket socket;
-    Student student;
     int countOfShowPass = 0;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
 
-        id = findViewById(R.id.id);
-        name = findViewById(R.id.name);
-        grade = findViewById(R.id.grade);
-        pass = findViewById(R.id.password);
-        confirm_pass = findViewById(R.id.password_confirm);
-        notifi = findViewById(R.id.notifi);
-        login_notifi = findViewById(R.id.login_notifi);
-        register_button = findViewById(R.id.register_button);
-        show_pass = findViewById(R.id.show_pass);
+
+    public RegisterFragment() {
+        // Required empty public constructor
+    }
+
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_register, container, false);
+
+        id = v.findViewById(R.id.id);
+        name = v.findViewById(R.id.name);
+        grade = v.findViewById(R.id.grade);
+        pass = v.findViewById(R.id.password);
+        confirm_pass = v.findViewById(R.id.password_confirm);
+        notifi = v.findViewById(R.id.notifi);
+        login_notifi = v.findViewById(R.id.login_notifi);
+        register_button = v.findViewById(R.id.register_button);
+        show_pass = v.findViewById(R.id.show_pass);
         try {
             socket = SocketUtil.getConnection();
         } catch (URISyntaxException e) {
@@ -79,7 +85,7 @@ public class Register extends AppCompatActivity {
                         socket.on("check existed account", new Emitter.Listener() {
                             @Override
                             public void call(final Object... args) {
-                                runOnUiThread(new Runnable() {
+                                getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         JSONObject json = (JSONObject) args[0];
@@ -100,6 +106,8 @@ public class Register extends AppCompatActivity {
                                                 notifi.setText("Đăng ký thành công!");
                                                 notifi.setVisibility(View.VISIBLE);
                                                 register_button.setEnabled(false);
+                                                socket.disconnect();
+                                                socket.close();
                                             }
                                         } catch (Exception e) {
                                         }
@@ -123,8 +131,11 @@ public class Register extends AppCompatActivity {
         login_notifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Login.class);
-                startActivity(intent);
+                Login nextFrag = new Login();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         show_pass.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +150,7 @@ public class Register extends AppCompatActivity {
                 }
             }
         });
+        return v;
     }
-
 }
+

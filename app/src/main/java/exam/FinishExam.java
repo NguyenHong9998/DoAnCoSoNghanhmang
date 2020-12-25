@@ -1,12 +1,18 @@
 package exam;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.multiplechoiceexaminationapp.MainActivity;
 import com.example.multiplechoiceexaminationapp.R;
 
 import org.json.JSONException;
@@ -44,7 +50,6 @@ public class FinishExam extends AppCompatActivity implements VoteDialog.ExampleD
         try {
             socket = SocketUtil.getConnection();
             socket.connect();
-
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -60,17 +65,21 @@ public class FinishExam extends AppCompatActivity implements VoteDialog.ExampleD
         VoteDialog dialog = new VoteDialog();
         dialog.show(getSupportFragmentManager(), "vote dialog");
     }
-    
+
     @Override
     public void applyVote(int rate) {
         JSONObject data = new JSONObject();
         try {
             data.put("rate", rate);
             data.put("id", id_list_ques);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         socket.emit("rate", data);
+        socket.disconnect();
+        socket.close();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
+
 }

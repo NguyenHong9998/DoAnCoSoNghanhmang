@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -70,17 +71,15 @@ public class MainActivity extends AppCompatActivity {
                         loadFragment(fragment);
                         break;
                     case R.id.dashboard:
+
                         fragment = new DashBoard();
                         loadFragment(fragment);
+
                         break;
                     case R.id.logout:
                         shareStorageUtil.applyValue("token", "");
                         navigationView.getMenu().getItem(0).setVisible(true);
                         navigationView.getMenu().getItem(3).setVisible(false);
-                        fragment = new Login();
-                        loadFragment(fragment);
-                        break;
-                    case R.id.score:
                         fragment = new Login();
                         loadFragment(fragment);
                         break;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment).commit();
+        fragmentTransaction.replace(R.id.frame, fragment).commitAllowingStateLoss();
         drawerLayout.closeDrawer(GravityCompat.START);
         fragmentTransaction.addToBackStack(null);
     }
