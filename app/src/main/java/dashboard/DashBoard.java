@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.multiplechoiceexaminationapp.R;
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import question.StartExamFragment;
+import utils.ShareStorageUtil;
 import utils.SocketUtil;
 
 
@@ -37,6 +39,7 @@ public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickLis
     List<Subjects> subjects;
     SubjectAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
+    ShareStorageUtil shareStorageUtil;
     Subjects subject;
     Socket socket;
 
@@ -53,7 +56,7 @@ public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickLis
         view = (RecyclerView) v.findViewById(R.id.gridView);
         layoutManager = new LinearLayoutManager(this.getActivity());
         view.setLayoutManager(layoutManager);
-
+        shareStorageUtil = new ShareStorageUtil(getContext());
         view.setHasFixedSize(true);
         subjects = new ArrayList<>();
 
@@ -85,16 +88,20 @@ public class DashBoard extends Fragment implements SubjectAdapter.OnItemClickLis
                             adapter.setOnItemClickListener(new SubjectAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
-                                    socket.disconnect();
-                                    socket.close();
-                                    StartExamFragment nextFrag = new StartExamFragment();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putParcelable("subject", subjects.get(position));
-                                    nextFrag.setArguments(bundle);
-                                    getActivity().getSupportFragmentManager().beginTransaction()
-                                            .replace(R.id.frame, nextFrag, "findThisFragment")
-                                            .addToBackStack(null)
-                                            .commit();
+                                    if (shareStorageUtil.getValue("token") == "" || shareStorageUtil.getValue("token") == null) {
+                                        Toast.makeText(getContext(), "Bạn hãy đăng nhập", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        socket.disconnect();
+                                        socket.close();
+                                        StartExamFragment nextFrag = new StartExamFragment();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putParcelable("subject", subjects.get(position));
+                                        nextFrag.setArguments(bundle);
+                                        getActivity().getSupportFragmentManager().beginTransaction()
+                                                .replace(R.id.frame, nextFrag, "findThisFragment")
+                                                .addToBackStack(null)
+                                                .commit();
+                                    }
                                 }
                             });
                         } catch (JSONException e) {

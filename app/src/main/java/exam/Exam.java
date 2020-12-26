@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.multiplechoiceexaminationapp.MainActivity;
 import com.example.multiplechoiceexaminationapp.R;
 
 import org.json.JSONArray;
@@ -32,6 +33,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import question.QuestionAdapter;
 import Object.*;
+import question.StartExamFragment;
 import utils.SocketUtil;
 
 public class Exam extends AppCompatActivity implements QuestionAdapter.OnItemClickListener {
@@ -146,6 +148,32 @@ public class Exam extends AppCompatActivity implements QuestionAdapter.OnItemCli
     public void onItemClick(int position) {
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Yêu cầu xác nhận: ");
+        builder.setMessage("Nếu bạn thoát, hệ thống sẽ không lưu những gì bạn đã thự hiện\n Bạn chắc chắn muốn thoát ?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                socket.disconnect();
+                socket.close();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public void confirm() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -155,6 +183,8 @@ public class Exam extends AppCompatActivity implements QuestionAdapter.OnItemCli
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
+                socket.disconnect();
+                socket.close();
                 viewScore();
                 dialog.dismiss();
             }
@@ -186,4 +216,5 @@ public class Exam extends AppCompatActivity implements QuestionAdapter.OnItemCli
         intent.putExtra("id_list_ques", subject.getId_list_ques());
         startActivity(intent);
     }
+
 }

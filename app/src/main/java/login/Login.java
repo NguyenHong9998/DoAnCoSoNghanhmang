@@ -4,11 +4,14 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ import utils.SocketUtil;
 
 public class Login extends Fragment {
     Button login_button;
+    ImageButton show_pass;
     EditText id;
     EditText password;
     LoginAccount loginAccount;
@@ -37,7 +41,7 @@ public class Login extends Fragment {
     Socket socket;
     TextView notifi, register;
     ShareStorageUtil shareStorageUtil;
-
+    int countOfShowPass = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class Login extends Fragment {
         id = v.findViewById(R.id.id);
         password = v.findViewById(R.id.password);
         login_button = v.findViewById(R.id.login_button);
+        show_pass =v.findViewById(R.id.show_pass_login);
         notifi = v.findViewById(R.id.notifi);
         register = v.findViewById(R.id.register);
         try {
@@ -117,6 +122,18 @@ public class Login extends Fragment {
                         .replace(R.id.frame, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+        show_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                countOfShowPass++;
+                if (countOfShowPass % 2 != 0) {
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
             }
         });
 

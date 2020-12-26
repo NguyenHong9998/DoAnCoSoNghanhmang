@@ -71,17 +71,15 @@ public class MainActivity extends AppCompatActivity {
                         loadFragment(fragment);
                         break;
                     case R.id.dashboard:
-
                         fragment = new DashBoard();
                         loadFragment(fragment);
-
                         break;
                     case R.id.logout:
                         shareStorageUtil.applyValue("token", "");
                         navigationView.getMenu().getItem(0).setVisible(true);
                         navigationView.getMenu().getItem(3).setVisible(false);
-                        fragment = new Login();
-                        loadFragment(fragment);
+                        finish();
+                        startActivity(getIntent());
                         break;
                     default:
                         return true;

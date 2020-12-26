@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,7 +44,7 @@ public class VoteDialog extends AppCompatDialogFragment {
                 public void onClick(View v) {
                     for (int j = 0; j <= count; j++) {
                         stars.get(j).setImageResource(R.drawable.choose_star);
-                        Toast.makeText(getContext(), "chosed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Thanks for your choice", Toast.LENGTH_LONG).show();
                     }
                     rate = count;
                 }
